@@ -1,0 +1,47 @@
+// Color
+$primary: #4b8c28 !important;
+$light: #a1c7c5 !important;
+$success: #21aa05 !important;
+
+html,
+body {
+    padding-top: 0;
+    padding-bottom: 0;
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+.bgn-primary {
+    background-color: $primary;
+}
+
+.txt-primary {
+    color: $primary;
+}
+
+.bgn-light {
+    background-color: $light;
+}
+
+.txt-light {
+    color: $light;
+}
+
+.bgn-success {
+    background-color: $success;
+}
+
+.txt-success {
+    color: $success;
+}
+
+
+div > .p-inputtext:enabled:focus{
+    border-color: #21aa05 !important;
+    box-shadow: 0 0 0 0.02rem green !important;
+}
+
+
+div > .p-inputtext:hover{
+    box-shadow: 0 0 0 0.02rem #21aa05 !important;
+}
