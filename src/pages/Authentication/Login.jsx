@@ -48,7 +48,7 @@ export default function Login() {
     } else {
       notification.showError("Login Failed");
     }
-    // reset();
+    reset();
   };
 
   return (

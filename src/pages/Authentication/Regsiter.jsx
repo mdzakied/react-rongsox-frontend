@@ -54,7 +54,7 @@ export default function Register() {
     } else {
       notification.showError("Register Failed");
     }
-    // reset();
+    reset();
   };
 
   return (
