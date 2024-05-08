@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 
@@ -14,18 +14,33 @@ import AuthService from "@services/AuthService";
 import Notification from "@shared/components/Notification/Notification";
 
 import Logo from "@/assets/images/rongsox-logo.png";
-import HeroLogin from "@/assets/images/recycle.png";
-import { useEffect } from "react";
+import HeroRegister from "@/assets/images/register.png";
 
 // create schema for validator with zod
 const schema = z.object({
   username: z
     .string()
     .min(4, { message: "Username must be at least 4 characters" }),
-  password: z.string().min(8, "Password must be at least 8 characters"),
+  password: z
+    .string()
+    .min(8, "Password must be at least 8 characters")
+    .regex(/^(?=.*[A-Z])(?=.*\d).*$/, {
+      message:
+        "Password must contain at least one uppercase letter and one number",
+    }),
+  email: z
+    .string()
+    .min(1, { message: "Email is required" })
+    .refine((email) => email.includes("@"), {
+      message: 'Email must contain "@" symbol',
+    }),
+  name: z.string().min(4, { message: "Name must be at least 4 characters" }),
+  address: z
+    .string()
+    .min(10, { message: "Username must be at least 10 characters" }),
 });
 
-export default function Login() {
+export default function RegisterAdmin() {
   // use service or shared component with useMemo -> prevent re-render
   const authService = useMemo(() => AuthService(), []);
   const notification = useMemo(() => Notification(), []);
@@ -47,77 +62,61 @@ export default function Login() {
     resolver: zodResolver(schema),
   });
 
-  // login -> useMutation react query
-  const { mutate: login, isPending } = useMutation({
+  // register admin -> useMutation react query
+  const { mutate: registerAdmin, isPending } = useMutation({
     mutationFn: async (payload) => {
       // login
-      return await authService.login(payload);
+      return await authService.registerAdmin(payload);
     },
-    onSuccess: (data) => {
-      // conditional redirect
-      if (data && data.statusCode === 200) {
-        // check role
-        if (data.data.roles[0] === "ROLE_CUSTOMER") {
-          // notification
-          notification.showError("Access Denied, you are not authorized !");
-        } else {
-          // save user to local storage -> json stringify
-          localStorage.setItem("user", JSON.stringify(data.data));
+    onSuccess: () => {
+      // notification
+      notification.showSuccess("Register admin success, account created !");
 
-          // notification
-          notification.showSuccess("Login success, welcome back !");
-
-          navigate("/dashboard");
-        }
-      }
+      // redirect
+      // navigate("/dashboard");
     },
     onError: (error) => {
-      // data user disabled or incorrect username or password
-      if (error && error.response.data.message === "User is disabled") {
+      // data already exists
+      if (error.response.data.message === "Data already exist") {
         // notification
-        notification.showError(
-          "Your account is disabled, please contact super admin !"
-        );
+        notification.showError("Username already exists !");
       } else {
         // notification
-        notification.showError("Username or password is incorrect !");
+        notification.showError("Register admin failed, please try again !");
       }
     },
   });
 
   const onSubmit = (data) => {
-    // login -> useMutation react query
-    login(data);
+    // register admin -> useMutation react query
+    registerAdmin(data);
 
     // reset form
     reset();
   };
 
-  // use effect -> check token always when service or route change
+  // use effect -> check authorization only superadmin
   useEffect(() => {
-    if (localStorage.getItem("user")) {
-      const checkToken = async () => {
-        const isValidToken = await authService.validateToken();
+    const checkSA = async () => {
+      const currentUser = await JSON.parse(localStorage.getItem("user"));
 
-        if (isValidToken) {
-          // notification
-          notification.showSuccess("You are already logged in !");
-
-          // redirect
-          navigate("/dashboard");
-        }
-      };
-      checkToken();
-    }
+      if (currentUser.roles[0] !== "ROLE_SUPER_ADMIN") {
+        //notification
+        notification.showError("You are not authorized to access this page !");
+        //redirect
+        navigate("/dashboard");
+      }
+    };
+    checkSA();
   }, [authService, navigate, notification]);
 
   return (
     <>
-      {/* Login Page */}
-      <div id="loginPage">
+      {/* Register Page */}
+      <div id="registerAdminPage">
         <div className="flex flex-row justify-content-center align-items-center flex-wrap h-screen">
           <div className="grid w-full align-items-center ">
-            {/* Login Form */}
+            {/* Register Form */}
             <div className="col-12 md:col-6 md:px-6 lg:px-8">
               {/* Logo */}
               <div className="mb-4">
@@ -126,9 +125,11 @@ export default function Login() {
 
               {/* Title */}
               <div className="ml-1">
-                <h2 className="font-semibold my-0">Log in to your account.</h2>
+                <h2 className="font-semibold my-0">
+                  Sign Up to admin account.
+                </h2>
                 <p className="text-sm text-gray-400">
-                  Enter your username address and password to log in.
+                  Enter admin username, password and data to sign up.
                 </p>
               </div>
 
@@ -185,17 +186,83 @@ export default function Login() {
                     </span>
                   </div>
 
-                  {/* Error Username */}
+                  {/* Error Password */}
                   {errors.password && (
                     <small id="password-help" className="text-xs p-error">
                       {errors.password.message}
                     </small>
                   )}
 
-                  {/* Login Button */}
+                  {/* Email */}
+                  <div className="p-inputgroup flex-1 mt-3">
+                    <span className="p-inputgroup-addon">
+                      <i className="pi pi-at"></i>
+                    </span>
+                    <InputText
+                      {...register("email")}
+                      id="email"
+                      placeholder="Email Address"
+                      variant="filled"
+                      className="p-inputtext-sm w-full lg:w-10"
+                      aria-describedby="email-help"
+                    />
+                  </div>
+
+                  {/* Error Email */}
+                  {errors.email && (
+                    <small id="email-help" className="text-xs p-error">
+                      {errors.email.message}
+                    </small>
+                  )}
+
+                  {/* Name */}
+                  <div className="p-inputgroup flex-1 mt-3">
+                    <span className="p-inputgroup-addon">
+                      <i className="pi pi-user"></i>
+                    </span>
+                    <InputText
+                      {...register("name")}
+                      id="name"
+                      placeholder="Name"
+                      variant="filled"
+                      className="p-inputtext-sm w-full lg:w-10"
+                      aria-describedby="name-help"
+                    />
+                  </div>
+
+                  {/* Error Name */}
+                  {errors.name && (
+                    <small id="name-help" className="text-xs p-error">
+                      {errors.name.message}
+                    </small>
+                  )}
+
+                  {/* Address */}
+                  <div className="p-inputgroup flex-1 mt-3">
+                    <span className="p-inputgroup-addon">
+                      <i className="pi pi-map"></i>
+                    </span>
+                    <InputText
+                      {...register("address")}
+                      id="address"
+                      placeholder="Address"
+                      variant="filled"
+                      className="p-inputtext-sm w-full lg:w-10"
+                      aria-describedby="address-help"
+                    />
+                  </div>
+
+                  {/* Error Address */}
+                  {errors.address && (
+                    <small id="address-help" className="text-xs p-error">
+                      {errors.address.message}
+                    </small>
+                  )}
+
+                  {/* Register Button */}
                   <div>
                     <Button
-                      label={isPending ? "Loading..." : "Login"}
+                      label={isPending ? "Loading..." : "Sign Up"}
                       className="bgn-success w-full mt-4 py-2"
                       severity="success"
                       size="small"
@@ -208,7 +275,7 @@ export default function Login() {
 
             {/* Image Ilustration */}
             <div className="col-12 md:col-6 hidden md:flex align-items-center">
-              <img src={HeroLogin} alt="HeroLogin" className="w-10" />
+              <img src={HeroRegister} alt="HeroRegister" className="w-10" />
             </div>
           </div>
         </div>

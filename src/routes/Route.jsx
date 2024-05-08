@@ -1,10 +1,12 @@
 import { createBrowserRouter, Navigate } from "react-router-dom";
+import ProtectedRoute from "./ProtectedRoute";
 
 import Layout from "@layouts/Layout";
 import Dashboard from "@pages/Dashboard/Dashboard";
 
 import Login from "@pages/Authentication/Login";
-import Register from "@pages/Authentication/Regsiter";
+import RegisterAdmin from "@pages/Authentication/RegisterAdmin";
+import RegisterCustomer from "@pages/Authentication/RegisterCustomer";
 
 const Router = createBrowserRouter([
   {
@@ -16,16 +18,54 @@ const Router = createBrowserRouter([
     element: <Login />,
   },
   {
-    path: "/register",
-    element: <Register />,
+    path: "/register-admin",
+    element: (
+      <ProtectedRoute>
+        <RegisterAdmin />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: "/register-customer",
+    element: (
+      <ProtectedRoute>
+        <RegisterCustomer />
+      </ProtectedRoute>
+    ),
   },
   {
     path: "dashboard",
-    element: <Layout />,
+    element: (
+      <ProtectedRoute>
+        <Layout />
+      </ProtectedRoute>
+    ),
     children: [
       {
         index: true,
         element: <Dashboard />,
+      },
+
+      {
+        path: "user",
+        children: [
+          {
+            path: "admin",
+            children: [
+              {
+                path: "update",
+              },
+            ],
+          },
+          {
+            path: "customer",
+            children: [
+              {
+                path: "update",
+              },
+            ],
+          },
+        ],
       },
     ],
   },

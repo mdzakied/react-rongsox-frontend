@@ -1,17 +1,42 @@
 import { Outlet } from "react-router-dom";
 
-import { PrimeReactProvider } from "primereact/api";
-import "primereact/resources/themes/lara-light-cyan/theme.css";
+import Navbar from "@shared/components/Navigation/Navbar";
+import SidebarNav from "../shared/components/Navigation/Sidebar/SidebarNav";
+import { useState } from "react";
 
 export default function Layout() {
+  const [visibleSbar, setVisibleSbar] = useState(true);
+
+  const handleCloseSbar = () => {
+    setVisibleSbar(false);
+  };
+
+  const handleOpenSbar = () => {
+    setVisibleSbar(true);
+  };
+
   return (
     <>
       <div id="layout">
-        <div>Layout for Semeru</div>
         <div id="content">
-          <PrimeReactProvider>
-            <Outlet />
-          </PrimeReactProvider>
+          <div className="flex flex-row">
+            {/* Sidebar */}
+            <div>
+              <SidebarNav
+                visibleSbar={visibleSbar}
+                handleCloseSbar={handleCloseSbar}
+              />
+            </div>
+            <div className="w-screen">
+              {/* Navbar */}
+              <nav className="mb-4">
+                <Navbar handleOpenSbar={handleOpenSbar} />
+              </nav>
+
+              {/* Page */}
+              <Outlet />
+            </div>
+          </div>
         </div>
       </div>
     </>

@@ -1,3 +1,16 @@
+// disable arrow on input number
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/* Firefox */
+input[type="number"] {
+    -moz-appearance: textfield;
+}
+
 // Color
 $primary: #4b8c28 !important;
 $light: #a1c7c5 !important;
@@ -5,10 +18,8 @@ $success: #21aa05 !important;
 
 html,
 body {
-    padding-top: 0;
-    padding-bottom: 0;
-    margin-top: 0;
-    margin-bottom: 0;
+    padding: 0;
+    margin: 0;
 }
 
 .bgn-primary {
@@ -35,13 +46,15 @@ body {
     color: $success;
 }
 
-
-div > .p-inputtext:enabled:focus{
+.p-inputtext:enabled:focus {
     border-color: #21aa05 !important;
     box-shadow: 0 0 0 0.02rem green !important;
 }
 
-
-div > .p-inputtext:hover{
+.p-inputtext:hover {
     box-shadow: 0 0 0 0.02rem #21aa05 !important;
+}
+
+.p-inputgroup-customer > .p-inputgroup {
+    height: 28px;
 }
