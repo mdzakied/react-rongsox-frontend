@@ -8,7 +8,14 @@ import Login from "@pages/Authentication/Login";
 import RegisterAdmin from "@pages/Authentication/RegisterAdmin";
 import RegisterCustomer from "@pages/Authentication/RegisterCustomer";
 
+import ErrorBoundary from "@/shared/components/Error/ErrorBoundary";
+import Error404 from "@shared/components/Error/Error404";
+
 const Router = createBrowserRouter([
+  {
+    path: "*",
+    element: <Error404 />,
+  },
   {
     path: "/",
     element: <Navigate to="/dashboard" replace={true} />,
@@ -20,25 +27,31 @@ const Router = createBrowserRouter([
   {
     path: "/register-admin",
     element: (
-      <ProtectedRoute>
-        <RegisterAdmin />
-      </ProtectedRoute>
+      <ErrorBoundary>
+        <ProtectedRoute>
+          <RegisterAdmin />
+        </ProtectedRoute>
+      </ErrorBoundary>
     ),
   },
   {
     path: "/register-customer",
     element: (
-      <ProtectedRoute>
-        <RegisterCustomer />
-      </ProtectedRoute>
+      <ErrorBoundary>
+        <ProtectedRoute>
+          <RegisterCustomer />
+        </ProtectedRoute>
+      </ErrorBoundary>
     ),
   },
   {
     path: "dashboard",
     element: (
-      <ProtectedRoute>
-        <Layout />
-      </ProtectedRoute>
+      <ErrorBoundary>
+        <ProtectedRoute>
+          <Layout />
+        </ProtectedRoute>
+      </ErrorBoundary>
     ),
     children: [
       {
