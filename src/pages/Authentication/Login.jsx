@@ -114,7 +114,7 @@ export default function Login() {
   return (
     <>
       {/* Login Page */}
-      <div id="loginPage">
+      <section id="loginPage">
         <div className="flex flex-row justify-content-center align-items-center flex-wrap h-screen">
           <div className="grid w-full align-items-center ">
             {/* Login Form */}
@@ -212,7 +212,7 @@ export default function Login() {
             </div>
           </div>
         </div>
-      </div>
+      </section>
     </>
   );
 }

@@ -17,7 +17,7 @@ export default function Layout() {
 
   return (
     <>
-      <div id="layout">
+      <section id="layout">
         <div id="content">
           <div className="flex flex-row">
             {/* Sidebar */}
@@ -38,7 +38,7 @@ export default function Layout() {
             </div>
           </div>
         </div>
-      </div>
+      </section>
     </>
   );
 }

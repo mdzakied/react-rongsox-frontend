@@ -72,14 +72,22 @@ export default function RegisterAdmin() {
       // notification
       notification.showSuccess("Register admin success, account created !");
 
+      // reset form
+      reset();
+
       // redirect
       // navigate("/dashboard");
     },
     onError: (error) => {
       // data already exists
-      if (error.response.data.message === "Data already exist") {
+      if (error.response.data.message === "Username already exists") {
         // notification
-        notification.showError("Username already exists !");
+        notification.showError(
+          "Username already exists, please choose another !"
+        );
+      } else if (error.response.data.message === "Email already exists") {
+        // notification
+        notification.showError("Email already exists, please choose another !");
       } else {
         // notification
         notification.showError("Register admin failed, please try again !");
@@ -90,9 +98,6 @@ export default function RegisterAdmin() {
   const onSubmit = (data) => {
     // register admin -> useMutation react query
     registerAdmin(data);
-
-    // reset form
-    reset();
   };
 
   // use effect -> check authorization only superadmin
@@ -113,7 +118,7 @@ export default function RegisterAdmin() {
   return (
     <>
       {/* Register Page */}
-      <div id="registerAdminPage">
+      <section id="registerAdminPage">
         <div className="flex flex-row justify-content-center align-items-center flex-wrap h-screen">
           <div className="grid w-full align-items-center ">
             {/* Register Form */}
@@ -279,7 +284,7 @@ export default function RegisterAdmin() {
             </div>
           </div>
         </div>
-      </div>
+      </section>
     </>
   );
 }

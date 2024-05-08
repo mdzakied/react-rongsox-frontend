@@ -82,14 +82,22 @@ export default function RegisterCustomer() {
       // notification
       notification.showSuccess("Register customer success, account created !");
 
+      // reset form
+      reset();
+
       // redirect
       // navigate("/dashboard");
     },
     onError: (error) => {
       // data already exists
-      if (error.response.data.message === "Data already exist") {
+      if (error.response.data.message === "Username already exists") {
         // notification
-        notification.showError("Username already exists !");
+        notification.showError(
+          "Username already exists, please choose another !"
+        );
+      } else if (error.response.data.message === "Email already exists") {
+        // notification
+        notification.showError("Email already exists, please choose another !");
       } else {
         // notification
         notification.showError("Register customer failed, please try again !");
@@ -100,15 +108,12 @@ export default function RegisterCustomer() {
   const onSubmit = (data) => {
     // register admin -> useMutation react query
     registerCustomer(data);
-
-    // reset form
-    reset();
   };
 
   return (
     <>
       {/* Register Page */}
-      <div id="registerCustomerPage">
+      <section id="registerCustomerPage">
         <div className="flex flex-row justify-content-center align-items-center flex-wrap h-screen">
           <div className="grid w-full align-items-center ">
             {/* Register Form */}
@@ -342,7 +347,7 @@ export default function RegisterCustomer() {
             </div>
           </div>
         </div>
-      </div>
+      </section>
     </>
   );
 }
