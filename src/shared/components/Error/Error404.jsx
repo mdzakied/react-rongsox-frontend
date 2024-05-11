@@ -27,6 +27,7 @@ function Error404() {
                   className="bgn-success btn-error"
                   severity="success"
                   size="small"
+                  style={{position: "relative", top: "-2rem"}}
                 />
               </Link>
             </div>

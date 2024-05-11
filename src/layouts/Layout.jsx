@@ -1,11 +1,11 @@
 import { Outlet } from "react-router-dom";
 
-import Navbar from "@shared/components/Navigation/Navbar";
+import Navbar from "@shared/components/Navigation/Navbar/Navbar";
 import SidebarNav from "../shared/components/Navigation/Sidebar/SidebarNav";
 import { useState } from "react";
 
 export default function Layout() {
-  const [visibleSbar, setVisibleSbar] = useState(true);
+  const [visibleSbar, setVisibleSbar] = useState(false);
 
   const handleCloseSbar = () => {
     setVisibleSbar(false);
@@ -29,12 +29,14 @@ export default function Layout() {
             </div>
             <div className="w-screen">
               {/* Navbar */}
-              <nav className="mb-4">
+              <nav className="shadow-2 mb-4">
                 <Navbar handleOpenSbar={handleOpenSbar} />
               </nav>
 
               {/* Page */}
-              <Outlet />
+              <div className="px-4">
+                <Outlet />
+              </div>
             </div>
           </div>
         </div>

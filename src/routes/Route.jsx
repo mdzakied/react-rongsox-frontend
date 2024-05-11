@@ -1,10 +1,16 @@
 import { createBrowserRouter, Navigate } from "react-router-dom";
 import ProtectedRoute from "./ProtectedRoute";
 
+import Login from "@pages/Authentication/Login";
+
 import Layout from "@layouts/Layout";
 import Dashboard from "@pages/Dashboard/Dashboard";
+import Transaction from "@pages/Transaction/Transaction";
+import Inventory from "@pages/Inventory/Inventory";
+import Admin from "@pages/User/Admin/Admin";
+import Customer from "@pages/User/Customer/Customer";
+import Profile from "@pages/Profile/Profile";
 
-import Login from "@pages/Authentication/Login";
 import RegisterAdmin from "@pages/Authentication/RegisterAdmin";
 import RegisterCustomer from "@pages/Authentication/RegisterCustomer";
 
@@ -25,32 +31,13 @@ const Router = createBrowserRouter([
     element: <Login />,
   },
   {
-    path: "/register-admin",
-    element: (
-      <ErrorBoundary>
-        <ProtectedRoute>
-          <RegisterAdmin />
-        </ProtectedRoute>
-      </ErrorBoundary>
-    ),
-  },
-  {
-    path: "/register-customer",
-    element: (
-      <ErrorBoundary>
-        <ProtectedRoute>
-          <RegisterCustomer />
-        </ProtectedRoute>
-      </ErrorBoundary>
-    ),
-  },
-  {
     path: "dashboard",
     element: (
       <ErrorBoundary>
-        <ProtectedRoute>
+        {/* <ProtectedRoute>
           <Layout />
-        </ProtectedRoute>
+        </ProtectedRoute> */}
+        <Layout />
       </ErrorBoundary>
     ),
     children: [
@@ -58,7 +45,14 @@ const Router = createBrowserRouter([
         index: true,
         element: <Dashboard />,
       },
-
+      {
+        path: "transaction",
+        element: <Transaction />,
+      },
+      {
+        path: "inventory",
+        element: <Inventory />,
+      },
       {
         path: "user",
         children: [
@@ -66,7 +60,8 @@ const Router = createBrowserRouter([
             path: "admin",
             children: [
               {
-                path: "update",
+                index: true,
+                element: <Admin />,
               },
             ],
           },
@@ -74,11 +69,16 @@ const Router = createBrowserRouter([
             path: "customer",
             children: [
               {
-                path: "update",
+                index: true,
+                element: <Customer />,
               },
             ],
           },
         ],
+      },
+      {
+        path: "profile",
+        element: <Profile />,
       },
     ],
   },
