@@ -7,14 +7,19 @@ import Layout from "@layouts/Layout";
 import Dashboard from "@pages/Dashboard/Dashboard";
 import Transaction from "@pages/Transaction/Transaction";
 import Inventory from "@pages/Inventory/Inventory";
+
 import Admin from "@pages/User/Admin/Admin";
+import AdminForm from "@pages/User/Admin/components/AdminForm";
+
 import Customer from "@pages/User/Customer/Customer";
+import CustomerForm from "@pages/User/Customer/components/CustomerForm";
+
 import Profile from "@pages/Profile/Profile";
 
 import ErrorBoundary from "@/shared/components/Error/ErrorBoundary";
 import Error404 from "@shared/components/Error/Error404";
 
-import AdminForm from "@pages/User/Admin/components/AdminForm";
+import RegisterCustomer from "../pages/Authentication/RegisterCustomer";
 
 const Router = createBrowserRouter([
   {
@@ -24,6 +29,10 @@ const Router = createBrowserRouter([
   {
     path: "/",
     element: <Navigate to="/dashboard" replace={true} />,
+  },
+  {
+    path: "/register-customer",
+    element: <RegisterCustomer />,
   },
   {
     path: "/login",
@@ -71,10 +80,15 @@ const Router = createBrowserRouter([
           },
           {
             path: "customer",
+            element: <Customer />,
             children: [
               {
-                index: true,
-                element: <Customer />,
+                path: "add",
+                element: <CustomerForm />,
+              },
+              {
+                path: "update/:id",
+                element: <CustomerForm />,
               },
             ],
           },

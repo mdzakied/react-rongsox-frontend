@@ -1,12 +1,10 @@
+import { useEffect, useMemo } from "react";
+import { Link, Outlet, useNavigate } from "react-router-dom";
+
 import { Button } from "primereact/button";
-import { Link, Outlet } from "react-router-dom";
 
 import AdminList from "./components/AdminList";
-import { useEffect } from "react";
-
 import Notification from "@shared/components/Notification/Notification";
-import { useNavigate } from "react-router-dom";
-import { useMemo } from "react";
 
 export default function Admin() {
   // use service or shared component with useMemo -> prevent re-render

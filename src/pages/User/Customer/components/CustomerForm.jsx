@@ -5,6 +5,7 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import { InputText } from "primereact/inputtext";
 import { Button } from "primereact/button";
 import { Dialog } from "primereact/dialog";
+import { Calendar } from "primereact/calendar";
 
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -19,10 +20,15 @@ import Notification from "@shared/components/Notification/Notification";
 const schemaUpdate = z.object({
   id: z.string(),
   name: z.string().min(4, { message: "Name must be at least 4 characters" }),
+  birthDate: z.date(),
   phoneNumber: z
     .string()
     .min(10, { message: "Phone number must be at least 10 digits" })
     .max(13, { message: "Phone number must be at most 13 digits" }),
+  ktpNumber: z
+    .string()
+    .min(16, { message: "KTP number must be 16 digits" })
+    .max(16, { message: "KTP number must be 16 digits" }),
   address: z
     .string()
     .min(10, { message: "Username must be at least 10 characters" }),
@@ -47,20 +53,28 @@ const schemaAdd = z.object({
       message: 'Email must contain "@" symbol',
     }),
   name: z.string().min(4, { message: "Name must be at least 4 characters" }),
+  birthDate: z.date(),
   phoneNumber: z
     .string()
     .min(10, { message: "Phone number must be at least 10 digits" })
     .max(13, { message: "Phone number must be at most 13 digits" }),
+  ktpNumber: z
+    .string()
+    .min(16, { message: "KTP number must be 16 digits" })
+    .max(16, { message: "KTP number must be 16 digits" }),
   address: z
     .string()
     .min(10, { message: "Username must be at least 10 characters" }),
 });
 
-export default function AdminForm() {
+export default function CustomerForm() {
   // use service or shared component with useMemo -> prevent re-render
   const authService = useMemo(() => AuthService(), []);
   const userService = useMemo(() => UserService(), []);
   const notification = useMemo(() => Notification(), []);
+
+  // use state for date
+  const [selectedDate, setSelectedDate] = useState();
 
   // use search params for id
   const { id } = useParams();
@@ -85,28 +99,30 @@ export default function AdminForm() {
     resolver: zodResolver(id ? schemaUpdate : schemaAdd),
   });
 
-  // register admin -> useMutation react query
-  const { mutate: serviceAdmin, isPending } = useMutation({
+  // register customer -> useMutation react query
+  const { mutate: serviceCustomer, isPending } = useMutation({
     mutationFn: async (payload) => {
       if (payload.id) {
-        // update admin
-        return await userService.updateAdmin(payload);
+        // update customer
+        return await userService.updateCustomer(payload);
       } else {
-        // add admin
-        return await authService.registerAdmin(payload);
+        // add customer
+        return await authService.registerCustomer(payload);
       }
     },
     onSuccess: () => {
       // notification
       notification.showSuccess(
-        id ? "Update admin success !" : "Add admin success, account created !"
+        id
+          ? "Update customer success !"
+          : "Register customer success, account created !"
       );
 
       // update cache tables
-      queryClient.invalidateQueries({ queryKey: ["admins"] });
+      queryClient.invalidateQueries({ queryKey: ["customers"] });
 
       // redirect
-      navigate("/dashboard/user/admin");
+      navigate("/dashboard/user/customer");
     },
     onError: (error) => {
       // data already exists
@@ -125,42 +141,50 @@ export default function AdminForm() {
         notification.showError(
           "Phone number already exists, please choose another !"
         );
+      } else if (error.response.data.message === "Ktp number already exists") {
+        // notification
+        notification.showError(
+          "Ktp number already exists, please choose another !"
+        );
       } else {
         // notification
         notification.showError(
           id
-            ? "Update admin failed, please try again !"
-            : "Register admin failed, please try again !"
+            ? "Update customer failed, please try again !"
+            : "Add customer failed, please try again !"
         );
       }
     },
   });
 
-  // get admin by id
+  // get customer by id
   useEffect(() => {
     // update form
     if (id) {
-      const getAdmineById = async () => {
+      const getCustomerById = async () => {
         try {
           // set data to form
-          const response = await userService.getAdminById(id);
-          const currentAdmin = response.data;
-          setValue("id", currentAdmin.id);
-          setValue("name", currentAdmin.name);
-          setValue("phoneNumber", currentAdmin.phoneNumber);
-          setValue("address", currentAdmin.address);
+          const response = await userService.getCustomerById(id);
+          const currentCustomer = response.data;
+          setValue("id", currentCustomer.id);
+          setValue("name", currentCustomer.name);
+          setValue("ktpNumber", currentCustomer.ktpNumber);
+          setValue("phoneNumber", currentCustomer.phoneNumber);
+          setValue("address", currentCustomer.address);
+          setValue("birthDate", new Date(currentCustomer.birthDate));
+          setSelectedDate(new Date(currentCustomer.birthDate));
         } catch (error) {
           console.log(error);
         }
       };
-      getAdmineById();
+      getCustomerById();
     }
   }, [id, userService, setValue]);
 
   // handle submit
   const onSubmit = (data) => {
-    // service admin -> useMutation react query
-    serviceAdmin(data);
+    // service customer -> useMutation react query
+    serviceCustomer(data);
   };
 
   // handle keydown event to stay in modal
@@ -184,12 +208,12 @@ export default function AdminForm() {
             {/* Title */}
             <div className="ml-1">
               <h2 className="font-semibold my-0">
-                {id ? "Update" : "Add"} admin account.
+                {id ? "Update" : "Add"} customer account.
               </h2>
               <p className="text-sm text-gray-400">
                 {id
-                  ? "Enter data admin to update an admin account"
-                  : "Enter admin username, password and data to create an account."}
+                  ? "Enter data customer to update an customer account"
+                  : "Enter customer username, password and data to create an account."}
               </p>
             </div>
 
@@ -305,6 +329,29 @@ export default function AdminForm() {
                   </small>
                 )}
 
+                {/* KTP Number */}
+                <div className="p-inputgroup flex-1 mt-3">
+                  <span className="p-inputgroup-addon">
+                    <i className="pi pi-id-card"></i>
+                  </span>
+                  <InputText
+                    {...register("ktpNumber")}
+                    id="ktpNumber"
+                    type="number"
+                    placeholder="KTP Number"
+                    variant="filled"
+                    className="p-inputtext-sm w-full lg:w-10"
+                    aria-describedby="ktpNumber-help"
+                  />
+                </div>
+
+                {/* Error KTP Number */}
+                {errors.ktpNumber && (
+                  <small id="ktpNumber-help" className="text-xs p-error">
+                    {errors.ktpNumber.message}
+                  </small>
+                )}
+
                 {/* Mobile Phone */}
                 <div className="p-inputgroup flex-1 mt-3">
                   <span className="p-inputgroup-addon">
@@ -325,6 +372,37 @@ export default function AdminForm() {
                 {errors.phoneNumber && (
                   <small id="phoneNumber-help" className="text-xs p-error">
                     {errors.phoneNumber.message}
+                  </small>
+                )}
+
+                {/* Birth Date */}
+                <div className="p-inputgroup flex-1 mt-2">
+                  <span className="p-inputgroup-addon">
+                    <i className="pi pi-calendar"></i>
+                  </span>
+                  <Calendar
+                    {...register("birthDate")}
+                    id="birthDate"
+                    placeholder={
+                      selectedDate
+                        ? new Date(selectedDate).toLocaleDateString("en-GB", {
+                            year: "numeric",
+                            month: "2-digit",
+                            day: "2-digit",
+                          })
+                        : "Birth Date"
+                    }
+                    variant="filled"
+                    className="p-inputtext-sm w-full"
+                    aria-describedby="birthDate-help"
+                    dateFormat="dd/mm/yy"
+                  />
+                </div>
+
+                {/* Error Birth Date */}
+                {errors.birthDate && (
+                  <small id="birthDate-help" className="text-xs p-error">
+                    {errors.birthDate.message}
                   </small>
                 )}
 
@@ -354,7 +432,7 @@ export default function AdminForm() {
                 {/* Modal Button */}
                 <div className="flex flex-row justify-content-end gap-2">
                   {/* Cancel Button */}
-                  <Link to="/dashboard/user/admin">
+                  <Link to="/dashboard/user/customer">
                     <Button
                       icon="pi pi-times-circle"
                       label="Cancel"
