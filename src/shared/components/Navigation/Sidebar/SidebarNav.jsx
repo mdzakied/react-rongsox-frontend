@@ -21,6 +21,9 @@ export default function SidebarNav({ visibleSbar, handleCloseSbar }) {
   // use navigate hook -> redirect
   const navigate = useNavigate();
 
+  // current user
+  const currentUser = JSON.parse(localStorage.getItem("user"));
+
   // accept logout
   const accept = () => {
     // clear local storage
@@ -156,7 +159,10 @@ export default function SidebarNav({ visibleSbar, handleCloseSbar }) {
                     </StyleClass>
                     <ul className="list-none p-0 m-0 ml-2 overflow-hidden">
                       {/* User Admin */}
-                      <li className="p-1">
+                      <li
+                        className="p-1"
+                        hidden={currentUser?.roles[0] === "ROLE_ADMIN"}
+                      >
                         <NavLink
                           to={"/dashboard/user/admin"}
                           className={({ isActive }) =>

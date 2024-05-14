@@ -11,11 +11,10 @@ import Admin from "@pages/User/Admin/Admin";
 import Customer from "@pages/User/Customer/Customer";
 import Profile from "@pages/Profile/Profile";
 
-import RegisterAdmin from "@pages/Authentication/RegisterAdmin";
-import RegisterCustomer from "@pages/Authentication/RegisterCustomer";
-
 import ErrorBoundary from "@/shared/components/Error/ErrorBoundary";
 import Error404 from "@shared/components/Error/Error404";
+
+import AdminForm from "@pages/User/Admin/components/AdminForm";
 
 const Router = createBrowserRouter([
   {
@@ -58,10 +57,15 @@ const Router = createBrowserRouter([
         children: [
           {
             path: "admin",
+            element: <Admin />,
             children: [
               {
-                index: true,
-                element: <Admin />,
+                path: "add",
+                element: <AdminForm />,
+              },
+              {
+                path: "update/:id",
+                element: <AdminForm />,
               },
             ],
           },

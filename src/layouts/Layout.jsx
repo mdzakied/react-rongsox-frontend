@@ -34,7 +34,7 @@ export default function Layout() {
               </nav>
 
               {/* Page */}
-              <div className="px-4">
+              <div className="px-4 pb-4">
                 <Outlet />
               </div>
             </div>

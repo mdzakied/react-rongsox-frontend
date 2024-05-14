@@ -15,6 +15,7 @@ input[type="number"] {
 $primary: #4b8c28 !important;
 $light: #a1c7c5 !important;
 $success: #21aa05 !important;
+$danger: #f4024f !important;
 
 // --- Base --- //
 html,
@@ -47,20 +48,93 @@ body {
     color: $success;
 }
 
+.bgn-danger {
+    background-color: $danger;
+}
+
+.txt-danger {
+    color: $danger;
+}
+
+.bgn-gray {
+    background-color: #e3e3e3;
+}
+
 // --- Custom Style in Prime React --- //
 
-// Textinput
+// Form
 .p-inputtext:enabled:focus {
     border-color: #21aa05 !important;
-    box-shadow: 0 0 0 0.02rem green !important;
+    box-shadow: 0 0 0 0.02rem #21aa05 !important;
 }
 
 .p-inputtext:hover {
-    box-shadow: 0 0 0 0.02rem #21aa05 !important;
+    box-shadow: 0 0 0 0.02em #21aa05 !important;
 }
 
 .p-inputgroup-customer > .p-inputgroup {
     height: 28px;
+}
+
+// Dropdown
+.p-dropdown {
+    border-color: white !important;
+    box-shadow: 0 0 0 0.02rem #21aa05 !important;
+    .p-inputtext {
+        padding-top: 0.6rem;
+        padding-bottom: 0.6rem;
+        padding-right: 0;
+        width: 200px;
+        box-shadow: 0 0 0 0.02rem white !important;
+    }
+
+    .p-dropdown-trigger {
+        width: 2.5rem;
+    }
+}
+
+// table column highlight
+.p-highlight {
+    color: black;
+    background-color: #e3e3e3;
+}
+
+.p-sortable-column-icon {
+    color: black;
+}
+
+// Form Filter
+.form-search {
+    .p-inputtext:enabled:focus {
+        border-color: white !important;
+        box-shadow:
+            0px 1px 8px rgba(0, 0, 0, 0.08),
+            0px 3px 4px rgba(0, 0, 0, 0.1),
+            0px 1px 4px -1px rgba(0, 0, 0, 0.1) !important;
+    }
+
+    .p-inputtext:hover {
+        box-shadow:
+            0px 1px 8px rgba(0, 0, 0, 0.08),
+            0px 3px 4px rgba(0, 0, 0, 0.1),
+            0px 1px 4px -1px rgba(0, 0, 0, 0.1) !important;
+    }
+}
+
+// Button Filter
+.filter-status {
+    .p-button {
+        padding: 10px 20px;
+        border-color: white !important;
+        box-shadow:
+            0px 1px 8px rgba(0, 0, 0, 0.08),
+            0px 3px 4px rgba(0, 0, 0, 0.1),
+            0px 1px 4px -1px rgba(0, 0, 0, 0.1) !important;
+    }
+
+    .p-focus {
+        background-color: #e3e3e3;
+    }
 }
 
 // Button Confirm Dialog
@@ -79,5 +153,3 @@ body {
     background-color: $success;
     box-shadow: 0 0 0 0.02rem #21aa05 !important;
 }
-
-// --- Custom Style --- //
