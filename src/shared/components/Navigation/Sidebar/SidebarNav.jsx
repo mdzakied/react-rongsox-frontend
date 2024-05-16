@@ -134,6 +134,23 @@ export default function SidebarNav({ visibleSbar, handleCloseSbar }) {
                   </li>
                 </ul>
 
+                {/* Bank */}
+                <ul className="list-none p-3 py-1 m-0">
+                  <li>
+                    <NavLink
+                      to={"/dashboard/bank"}
+                      className={({ isActive }) =>
+                        isActive
+                          ? "p-ripple p-3 flex align-items-center text-600 hover:surface-100 cursor-pointer border-round shadow-3 no-underline"
+                          : "p-ripple p-3 flex align-items-center text-600 hover:surface-100 cursor-pointer no-underline"
+                      }
+                    >
+                      <i className="pi pi-building-columns mr-2"></i>
+                      <span className="font-medium">Bank </span>
+                    </NavLink>
+                  </li>
+                </ul>
+
                 {/* Users */}
                 <ul className="list-none p-3 py-1 m-0">
                   <li>
