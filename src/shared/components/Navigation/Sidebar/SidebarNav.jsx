@@ -212,7 +212,7 @@ export default function SidebarNav({ visibleSbar, handleCloseSbar }) {
                 </ul>
 
                 {/* Profile */}
-                <ul className="list-none p-3 py-1 m-0">
+                {/* <ul className="list-none p-3 py-1 m-0">
                   <li>
                     <NavLink
                       to={"/dashboard/profile"}
@@ -226,7 +226,7 @@ export default function SidebarNav({ visibleSbar, handleCloseSbar }) {
                       <span className="font-medium">Profile</span>
                     </NavLink>
                   </li>
-                </ul>
+                </ul> */}
 
                 {/* Logout */}
                 <ul className="list-none p-3 py-1 m-0">

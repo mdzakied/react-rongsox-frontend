@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { Link, useNavigate, useParams } from "react-router-dom";
 
@@ -11,7 +11,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-import AuthService from "@services/AuthService";
 import BankService from "@services/BankService";
 import Notification from "@shared/components/Notification/Notification";
 
@@ -49,9 +48,6 @@ export default function BankForm() {
 
   // access the client
   const queryClient = useQueryClient();
-
-  // use state for visible password
-  const [visiblePassword, setVisiblePassword] = useState(false);
 
   // use form hook with schema from zod resolver
   const {

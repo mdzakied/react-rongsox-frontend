@@ -5,13 +5,12 @@ import { Link, useSearchParams } from "react-router-dom";
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useQuery} from "@tanstack/react-query";
 
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { Button } from "primereact/button";
-import { Tag } from "primereact/tag";
-import { confirmDialog } from "primereact/confirmdialog";
+
 import { Dropdown } from "primereact/dropdown";
 import { IconField } from "primereact/iconfield";
 import { InputText } from "primereact/inputtext";
@@ -19,7 +18,7 @@ import { InputIcon } from "primereact/inputicon";
 import { Skeleton } from "primereact/skeleton";
 
 import BankService from "@services/BankService";
-import Notification from "@shared/components/Notification/Notification";
+// import Notification from "@shared/components/Notification/Notification";
 
 // create schema search for validator with zod
 const schema = z.object({
@@ -27,15 +26,15 @@ const schema = z.object({
 });
 
 export default function BankList() {
-  // access the client
-  const queryClient = useQueryClient();
+  // // access the client
+  // const queryClient = useQueryClient();
 
   // use state for data tables and search params
   const [searchParams, setSearchParams] = useSearchParams();
 
   // use service and utils with useMemo -> prevent re-render
   const bankService = useMemo(() => BankService(), []);
-  const notification = useMemo(() => Notification(), []);
+  // const notification = useMemo(() => Notification(), []);
 
   // use form hook with schema from zod resolver
   const { register, handleSubmit } = useForm({
