@@ -21,6 +21,7 @@ import { Image } from "primereact/image";
 
 import InventoryService from "@services/InventoryService";
 import Notification from "@shared/components/Notification/Notification";
+import NumberFormatter from "@shared/utils/NumberFormatter";
 
 // create schema search for validator with zod
 const schema = z.object({
@@ -37,6 +38,7 @@ export default function InventoryList() {
   // use service and utils with useMemo -> prevent re-render
   const inventoryService = useMemo(() => InventoryService(), []);
   const notification = useMemo(() => Notification(), []);
+  const numberFormatter = useMemo(() => NumberFormatter(), []);
 
   // use form hook with schema from zod resolver
   const { register, handleSubmit } = useForm({
@@ -334,10 +336,15 @@ export default function InventoryList() {
             <Column header="Image" body={imageBodyTemplate}></Column>
             <Column field="stuffName" header="Name" sortable></Column>
             <Column field="weight" header="Weight" sortable></Column>
-            <Column field="buyingPrice" header="Buying Price" sortable></Column>
+            <Column field="buyingPrice" header="Buying Price"       body={(data) => {
+                return numberFormatter.formatRupiah(data.buyingPrice);
+              }} sortable></Column>
             <Column
               field="sellingPrice"
               header="Selling Price"
+              body={(data) => {
+                return numberFormatter.formatRupiah(data.sellingPrice);
+              }}
               sortable
             ></Column>
             <Column
