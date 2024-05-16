@@ -34,9 +34,7 @@ const schemaUpdate = z.object({
 
 // create schema add for validator with zod
 const schemaAdd = z.object({
-  stuffName: z
-    .string()
-    .min(4, { message: "Name must be at least 4 characters" }),
+  stuffName: z.string().min(4, { message: "Name must be at least 4 characters" }),
   buyingPrice: z.string().min(1, { message: "Buying price is required" }),
   sellingPrice: z.string().min(1, { message: "Selling price is required" }),
   // weight: z.string().min(1, { message: "Weight is required" }),
@@ -67,7 +65,7 @@ export default function InventoryForm() {
     setValue,
     formState: { errors, isValid },
   } = useForm({
-    mode: "onSubmit",
+    mode: "onChange",
     resolver: zodResolver(id ? schemaUpdate : schemaAdd),
   });
 
@@ -196,7 +194,7 @@ export default function InventoryForm() {
             {/* Form */}
             <form onSubmit={handleSubmit(onSubmit)}>
               <div className="mt-5">
-                {/* Name */}
+                {/* stuffName */}
                 <div className="p-inputgroup flex-1 mt-3">
                   <span className="p-inputgroup-addon">
                     <i className="pi pi-user"></i>
@@ -311,14 +309,17 @@ export default function InventoryForm() {
                       }`}
                       required={id ? false : true}
                     />
-                    {errors.image && (
-                      <label className="form-label">
-                        <span className="form-label-alt text-red">
-                          {errors.image.message}
-                        </span>
-                      </label>
-                    )}
                   </div>
+                </div>
+
+                <div>
+                  {errors.image && (
+                    <label className="form-label">
+                      <span className="form-label-alt txt-danger text-xs">
+                        {errors.image.message}
+                      </span>
+                    </label>
+                  )}
                 </div>
 
                 {/* Name */}
@@ -366,7 +367,7 @@ export default function InventoryForm() {
                     className="bgn-success w-auto mt-4 py-2"
                     severity="success"
                     size="small"
-                    disabled={id ? isPending :  isPending || !isValid}
+                    disabled={id ? isPending : isPending || !isValid}
                     loading={isPending}
                   />
                 </div>

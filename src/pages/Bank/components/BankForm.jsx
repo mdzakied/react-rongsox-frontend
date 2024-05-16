@@ -171,7 +171,7 @@ export default function BankForm() {
             <form onSubmit={handleSubmit(onSubmit)}>
               <div className="mt-5">
                 {/* Bank Name */}
-                <div className="p-inputgroup flex-1 mb-3">
+                <div className="p-inputgroup flex-1">
                   <span className="p-inputgroup-addon">
                     <i className="pi pi-building-columns"></i>
                   </span>
@@ -194,7 +194,7 @@ export default function BankForm() {
                 )}
 
                 {/* Bank Code */}
-                <div className="p-inputgroup flex-1">
+                <div className="p-inputgroup flex-1 mt-3">
                   <span className="p-inputgroup-addon">
                     <i className="pi pi-credit-card"></i>
                   </span>
@@ -219,7 +219,7 @@ export default function BankForm() {
                 {/* Modal Button */}
                 <div className="flex flex-row justify-content-end gap-2">
                   {/* Cancel Button */}
-                  <Link to="/dashboard/inventory">
+                  <Link to="/dashboard/bank">
                     <Button
                       icon="pi pi-times-circle"
                       label="Cancel"
