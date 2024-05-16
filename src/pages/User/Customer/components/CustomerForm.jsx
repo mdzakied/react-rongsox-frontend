@@ -212,7 +212,7 @@ export default function CustomerForm() {
               </h2>
               <p className="text-sm text-gray-400">
                 {id
-                  ? "Enter data customer to update an customer account"
+                  ? "Enter data customer to update an customer profile."
                   : "Enter customer username, password and data to create an account."}
               </p>
             </div>
@@ -376,7 +376,7 @@ export default function CustomerForm() {
                 )}
 
                 {/* Birth Date */}
-                <div className="p-inputgroup flex-1 mt-2">
+                <div className="p-inputgroup flex-1 mt-3">
                   <span className="p-inputgroup-addon">
                     <i className="pi pi-calendar"></i>
                   </span>

@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { Link, useSearchParams } from "react-router-dom";
 
@@ -10,8 +10,6 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { Button } from "primereact/button";
-import { Sidebar } from "primereact/sidebar";
-import { Divider } from "primereact/divider";
 import { Tag } from "primereact/tag";
 import { confirmDialog } from "primereact/confirmdialog";
 import { Dropdown } from "primereact/dropdown";
@@ -19,8 +17,9 @@ import { IconField } from "primereact/iconfield";
 import { InputText } from "primereact/inputtext";
 import { InputIcon } from "primereact/inputicon";
 import { Skeleton } from "primereact/skeleton";
+import { Image } from "primereact/image";
 
-import UserService from "@services/UserService";
+import InventoryService from "@services/InventoryService";
 import Notification from "@shared/components/Notification/Notification";
 
 // create schema search for validator with zod
@@ -28,11 +27,7 @@ const schema = z.object({
   search: z.optional(z.string()),
 });
 
-export default function AdminList() {
-  // use state for modal and detail
-  const [visibleDetail, setVisibleDetail] = useState(false);
-  const [selectedAdmin, setSelectedAdmin] = useState(null);
-
+export default function InventoryList() {
   // access the client
   const queryClient = useQueryClient();
 
@@ -40,7 +35,7 @@ export default function AdminList() {
   const [searchParams, setSearchParams] = useSearchParams();
 
   // use service and utils with useMemo -> prevent re-render
-  const userService = useMemo(() => UserService(), []);
+  const inventoryService = useMemo(() => InventoryService(), []);
   const notification = useMemo(() => Notification(), []);
 
   // use form hook with schema from zod resolver
@@ -92,30 +87,30 @@ export default function AdminList() {
     });
   };
 
-  // update status admin -> useMutation react query
-  const { mutate: updateStatusAdmin } = useMutation({
+  // update status inventory -> useMutation react query
+  const { mutate: updateStatusInventory } = useMutation({
     mutationFn: async (id, status) => {
-      // update admin
-      return await userService.updateStatusAdminById(id, status);
+      // update inventory
+      return await inventoryService.updateStatusInventoryById(id, status);
     },
     onSuccess: () => {
       // notification
-      notification.showSuccess("Update admin status success !");
+      notification.showSuccess("Update stuff status success !");
 
       // update cache tables
-      queryClient.invalidateQueries({ queryKey: ["admins"] });
+      queryClient.invalidateQueries({ queryKey: ["stuffs"] });
     },
     onError: () => {
       // notification
-      notification.showError("Update admin status failed !");
+      notification.showError("Update inventory status failed !");
     },
   });
 
-  // get all admin -> react query
+  // get all inventory -> react query
   const { data, isLoading } = useQuery({
-    queryKey: ["admins", search, status, page, size],
+    queryKey: ["stuffs", search, status, page, size],
     queryFn: async () => {
-      return await userService.getAllAdmin({
+      return await inventoryService.getAllInventory({
         name: search,
         status: status,
         page: page,
@@ -124,7 +119,7 @@ export default function AdminList() {
     },
   });
 
-  // loading get all admin -> react query
+  // loading get all inventory -> react query
   if (isLoading) {
     return (
       <>
@@ -145,37 +140,29 @@ export default function AdminList() {
     );
   }
 
-  // header sidebar detail
-  const headerSidebarDetail = (
-    <div className="flex flex-column align-items-center gap-2">
-      <span className="text-xl font-medium">Detail Admin</span>
-    </div>
-  );
+  // image column table
+  const imageBodyTemplate = (rowData) => {
+    return (
+      <div>
+        <Image
+          src={rowData.image.url}
+          alt={rowData.name}
+          width="100"
+          height="100"
+          preview
+          className="border-round shadow-3"
+        />
+      </div>
+    );
+  };
 
   // action column table
   const actionBodyTemplate = (rowData) => {
     return (
-      <div className={`${rowData.username === "superadmin" ? "hidden" : ""}`}>
+      <div>
         <div className="flex flex-row gap-3">
-          {/* Detail */}
-          <Button
-            onClick={() => {
-              setVisibleDetail(true), setSelectedAdmin(rowData);
-            }}
-            icon="pi pi-user"
-            text
-            raised
-            size="small"
-            tooltip="Detail"
-            tooltipOptions={{
-              position: "bottom",
-              mouseTrack: true,
-              mouseTrackTop: 15,
-            }}
-          />
-
           {/* Edit */}
-          <Link to={`/dashboard/user/admin/update/${rowData.id}`}>
+          <Link to={`/dashboard/inventory/update/${rowData.id}`}>
             <Button
               icon="pi pi-pen-to-square"
               text
@@ -239,8 +226,8 @@ export default function AdminList() {
       status: !rowData.status,
     };
 
-    // update status admin -> useMutation react query
-    updateStatusAdmin(payload);
+    // update status inventory -> useMutation react query
+    updateStatusInventory(payload);
   };
 
   // confirm update status
@@ -256,102 +243,6 @@ export default function AdminList() {
 
   return (
     <>
-      {/* Sidebar Detail */}
-      <Sidebar
-        header={headerSidebarDetail}
-        visible={visibleDetail}
-        onHide={() => setVisibleDetail(false)}
-        position="right"
-      >
-        <div className="mt-2">
-          {/* User Account */}
-          <div className="p-3 mb-4 shadow-3">
-            {/* Title */}
-            <div className="flex flex-row text-sm font-semibold">
-              <i className="pi pi-id-card mr-2 flex align-items-center"></i>
-              User Account
-            </div>
-            <Divider className="mt-3" />
-
-            {/* Username */}
-            <div className="flex flex-row card mb-3">
-              <div className="flex flex-column">
-                <span className="text-xs font-semibold">Username</span>
-                <span className="text-xs">{selectedAdmin?.username}</span>
-              </div>
-            </div>
-
-            {/* Email */}
-            <div className="flex flex-row card mb-3">
-              <div className="flex flex-column">
-                <span className="text-xs font-semibold">Email</span>
-                <span className="text-xs">{selectedAdmin?.email}</span>
-              </div>
-            </div>
-
-            {/* Status */}
-            <div className="flex flex-row card">
-              <div className="flex flex-column">
-                <span className="text-xs font-semibold">Status</span>
-                <span className="text-xs">
-                  {selectedAdmin?.status ? (
-                    <span>
-                      <i
-                        className="pi pi-circle-on mr-1 txt-success"
-                        style={{ fontSize: "0.5rem" }}
-                      ></i>
-                      active
-                    </span>
-                  ) : (
-                    <span>
-                      <i
-                        className="pi pi-circle-on mr-1 txt-danger"
-                        style={{ fontSize: "0.5rem" }}
-                      ></i>
-                      inactive
-                    </span>
-                  )}
-                </span>
-              </div>
-            </div>
-          </div>
-
-          {/* User */}
-          <div className="p-3 shadow-3">
-            {/* Title */}
-            <div className="flex flex-row text-sm font-semibold">
-              <i className="pi pi-user mr-2 flex align-items-center"></i>
-              User
-            </div>
-            <Divider className="mt-3" />
-
-            {/* Username */}
-            <div className="flex flex-row card mb-3">
-              <div className="flex flex-column">
-                <span className="text-xs font-semibold">Name</span>
-                <span className="text-xs">{selectedAdmin?.username}</span>
-              </div>
-            </div>
-
-            {/* Phone Number */}
-            <div className="flex flex-row card mb-3">
-              <div className="flex flex-column">
-                <span className="text-xs font-semibold">Phone Number</span>
-                <span className="text-xs">{selectedAdmin?.phoneNumber}</span>
-              </div>
-            </div>
-
-            {/* Address */}
-            <div className="flex flex-row card">
-              <div className="flex flex-column">
-                <span className="text-xs font-semibold">Address</span>
-                <span className="text-xs">{selectedAdmin?.address}</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </Sidebar>
-
       {/* Layout */}
       <div className="flex flex-column w-full">
         {/* Filter Status */}
@@ -425,14 +316,13 @@ export default function AdminList() {
         </div>
 
         {/* Table */}
-        <div className="card mt-4 shadow-3 border-round">
+        <div className="card mt-4 shadow-3">
           <DataTable
             value={data.data}
             stripedRows
             style={{ maxWidth: "58rem" }}
           >
             <Column
-              header="No"
               body={(data, props) => {
                 if (page == 1) {
                   return (props.rowIndex += 1);
@@ -441,9 +331,15 @@ export default function AdminList() {
                 }
               }}
             ></Column>
-            <Column field="name" header="Name" sortable></Column>
-            <Column field="username" header="Username" sortable></Column>
-            <Column field="email" header="Email" sortable></Column>
+            <Column header="Image" body={imageBodyTemplate}></Column>
+            <Column field="stuffName" header="Name" sortable></Column>
+            <Column field="weight" header="Weight" sortable></Column>
+            <Column field="buyingPrice" header="Buying Price" sortable></Column>
+            <Column
+              field="sellingPrice"
+              header="Selling Price"
+              sortable
+            ></Column>
             <Column
               field="status"
               header="Status"
@@ -456,7 +352,7 @@ export default function AdminList() {
               }}
               sortable
             ></Column>
-            <Column header="Action" body={actionBodyTemplate}></Column>
+            <Column body={actionBodyTemplate} header="Action"></Column>
           </DataTable>
 
           {/* Pagination */}

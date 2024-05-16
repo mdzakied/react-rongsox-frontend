@@ -439,8 +439,9 @@ export default function CustomerList() {
           />
         </div>
 
-        {/* Filter Search */}
+        {/* Filter */}
         <div className="card flex flex-row justify-content-between gap-3">
+          {/* Size */}
           <div>
             <Dropdown
               value={size}
@@ -458,13 +459,12 @@ export default function CustomerList() {
               className="w-5rem shadow-3"
             />
           </div>
+
+          {/* Search */}
           <form
             onSubmit={handleSubmit(onSubmitSearch)}
             className="flex flex-row gap-2"
           >
-            {/*  */}
-            {/* Form */}
-
             <div className="form-search">
               <IconField
                 iconPosition="left"
@@ -482,7 +482,7 @@ export default function CustomerList() {
         </div>
 
         {/* Table */}
-        <div className="card mt-4 shadow-3">
+        <div className="card mt-4 shadow-3 border-round">
           <DataTable
             value={data.data}
             stripedRows

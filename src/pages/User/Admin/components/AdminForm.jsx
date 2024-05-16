@@ -140,7 +140,7 @@ export default function AdminForm() {
   useEffect(() => {
     // update form
     if (id) {
-      const getAdmineById = async () => {
+      const getAdminById = async () => {
         try {
           // set data to form
           const response = await userService.getAdminById(id);
@@ -153,7 +153,7 @@ export default function AdminForm() {
           console.log(error);
         }
       };
-      getAdmineById();
+      getAdminById();
     }
   }, [id, userService, setValue]);
 
@@ -188,7 +188,7 @@ export default function AdminForm() {
               </h2>
               <p className="text-sm text-gray-400">
                 {id
-                  ? "Enter data admin to update an admin account"
+                  ? "Enter data admin to update an admin profile."
                   : "Enter admin username, password and data to create an account."}
               </p>
             </div>
