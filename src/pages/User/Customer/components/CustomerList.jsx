@@ -175,7 +175,7 @@ export default function CustomerList() {
           />
 
           {/* Edit */}
-          <Link to={`/dashboard/user/customer/update/${rowData.id}`}>
+          <Link to={`/dashboard/user/customer/update/${rowData.id}`} >
             <Button
               icon="pi pi-pen-to-square"
               text

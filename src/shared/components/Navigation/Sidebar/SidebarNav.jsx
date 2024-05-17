@@ -112,7 +112,7 @@ export default function SidebarNav({ visibleSbar, handleCloseSbar }) {
                       }
                     >
                       <i className="pi pi-chart-line mr-2"></i>
-                      <span className="font-medium">Transactions</span>
+                      <span className="font-medium">Transaction</span>
                     </NavLink>
                   </li>
                 </ul>
