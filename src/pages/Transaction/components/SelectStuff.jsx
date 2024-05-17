@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { useForm } from "react-hook-form";
 
 import * as z from "zod";
@@ -14,6 +14,7 @@ import { useQuery } from "@tanstack/react-query";
 import PropTypes from "prop-types";
 
 import InventoryService from "@services/InventoryService";
+import Notification from "@shared/components/Notification/Notification";
 
 // create schema add for validator with zod
 const schemaAdd = z.object({
@@ -23,6 +24,7 @@ const schemaAdd = z.object({
 export default function SelectStuff({ handleAddTransDetails }) {
   // use service and utils with useMemo -> prevent re-render
   const inventoryService = InventoryService();
+  const notification = useMemo(() => Notification(), []);
 
   // use state for visible modal and data
   const [visibleModal, setVisibleModal] = useState(false);
@@ -64,6 +66,9 @@ export default function SelectStuff({ handleAddTransDetails }) {
 
     // handle add to card
     handleAddTransDetails(stuff);
+
+    // notification
+    notification.showSuccess("Stuff added to transaction !");
 
     // reset
     setSelectedStuff(null);

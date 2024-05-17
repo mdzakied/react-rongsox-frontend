@@ -18,6 +18,7 @@ import Notification from "@shared/components/Notification/Notification";
 import NumberFormatter from "@shared/utils/NumberFormatter";
 import UpdateDeposit from "./UpdateDeposit";
 import UpdateWithdraw from "./UpdateWithdraw";
+import { Image } from "primereact/image";
 
 export default function TransactionList() {
   // use state for modal and detail
@@ -129,10 +130,6 @@ export default function TransactionList() {
     // set form and data edited
     const form = new FormData();
 
-    console.log("====================================");
-    console.log(image[0]);
-    console.log("====================================");
-
     let withdrawal = {
       id: id,
       status: "Success",
@@ -143,10 +140,6 @@ export default function TransactionList() {
     if (image) {
       form.append("image", image[0]);
     }
-
-    console.log("====================================");
-    console.log(form);
-    console.log("====================================");
 
     // update status transaction
     updateStatusTransactionWithdraw(form);
@@ -345,7 +338,11 @@ export default function TransactionList() {
           {/* Transaction Detail */}
           <div
             className="p-3 shadow-3"
-            hidden={selectedTransaction ? selectedTransaction.transactionType !== "Deposit" : ""}
+            hidden={
+              selectedTransaction
+                ? selectedTransaction.transactionType !== "Deposit"
+                : ""
+            }
           >
             {/* Title */}
             <div className="flex flex-row text-sm font-semibold">
@@ -385,7 +382,11 @@ export default function TransactionList() {
           {/* Detail Bank Account */}
           <div
             className="p-3 mb-4 shadow-3"
-            hidden={selectedTransaction ? selectedTransaction.transactionType !== "Withdrawal" : ""}
+            hidden={
+              selectedTransaction
+                ? selectedTransaction.transactionType !== "Withdrawal"
+                : ""
+            }
           >
             {/* Title */}
             <div className="flex flex-row text-sm font-semibold">
@@ -421,10 +422,14 @@ export default function TransactionList() {
             </div>
           </div>
 
-          {/* Detail Bank Account */}
+          {/* Receipt */}
           <div
             className="p-3 mb-4 shadow-3"
-            hidden={selectedTransaction ? selectedTransaction.transactionType !== "Withdrawal" : ""}
+            hidden={
+              selectedTransaction
+                ? selectedTransaction.transactionType !== "Withdrawal"
+                : ""
+            }
           >
             {/* Title */}
             <div className="flex flex-row text-sm font-semibold">
@@ -435,12 +440,16 @@ export default function TransactionList() {
 
             {/* Bank Name */}
             <div className="flex flex-row card mb-3">
-              <div className="flex flex-column">
-                <span className="text-xs font-semibold">Bank Name</span>
-                <span className="text-xs">{selectedTransaction?.bankName}</span>
+              <div className="flex flex-column w-full h-auto text-center">
+                <Image
+                  src={selectedTransaction?.transferReceipt?.url}
+                  alt={selectedTransaction?.transferReceipt?.name}
+                  width="140"
+                  height="100"
+                  preview
+                />
               </div>
             </div>
-
           </div>
         </div>
       </Sidebar>

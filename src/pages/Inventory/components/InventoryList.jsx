@@ -336,9 +336,14 @@ export default function InventoryList() {
             <Column header="Image" body={imageBodyTemplate}></Column>
             <Column field="stuffName" header="Name" sortable></Column>
             <Column field="weight" header="Weight" sortable></Column>
-            <Column field="buyingPrice" header="Buying Price"       body={(data) => {
+            <Column
+              field="buyingPrice"
+              header="Buying Price"
+              body={(data) => {
                 return numberFormatter.formatRupiah(data.buyingPrice);
-              }} sortable></Column>
+              }}
+              sortable
+            ></Column>
             <Column
               field="sellingPrice"
               header="Selling Price"
