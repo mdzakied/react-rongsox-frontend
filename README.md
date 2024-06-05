@@ -43,7 +43,14 @@ Here're some of the project's best features :
     * Create Transaction Deposit
     * Update Status in Transaction Deposit
     * Update Status in Transaction Withdraw with Upload Evidance of Transfer
+      
+<br />
+<h2>🖥️ Layout</h2>
 
+Here're project's layout :
+
+[rongsox-layout](https://www.figma.com/design/wk5ePBhqmrX7Cm39QOdf07/Rongsox?m=auto&t=3MtGzxCvZ3tkL6px-6)
+<br />
   
 <h2>💻 Built with</h2>
 
