@@ -19,6 +19,7 @@ The **Rongsox** is a web application designed for managing recycled goods within
 - **Frontend 💻:** React.js for building the user interface.
 - **Styling 🎨:** Tailwind CSS for responsive design.
 - **UI Components 🖌️:** Prime React for enhanced UI components.
+- **Data Fetching 📡** : Axios for HTTP requests and TanStack Query for efficient server state management.
 - **Backend 🖥️:** Communicates with a backend API for data management and user authentication.
 - **Authentication 🔐:** Implemented via JWT for secure access control.
 
