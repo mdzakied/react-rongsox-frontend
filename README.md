@@ -1,4 +1,4 @@
-<h1 align="center" id="title">react-rongsox-fronted</h1>
+<h1 align="center" id="title">react-rongsox-frontend</h1>
 
 <p align="center" id="description">Web app for managing data of recycled goods in 'bank sampah app'.</p>
 
