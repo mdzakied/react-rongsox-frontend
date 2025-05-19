@@ -1,6 +1,6 @@
 <h1 align="center" id="title">react-rongsox-frontend</h1>
 
-<p align="center" id="description">Web app for managing data of recycled goods in 'bank sampah app'.</p>
+<p align="center" id="description">Web Application for Recycled Goods Sales and Management System.</p>
 
 ## 🌟 Project Overview
 
